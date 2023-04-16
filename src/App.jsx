@@ -17,6 +17,14 @@ function App() {
     select: (data) => data.language,
   });
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error on Request</div>;
+  }
+
   return (
     <div className='App'>
       <h1>To do App</h1>
@@ -29,7 +37,6 @@ function App() {
           </p>
         );
       })}
-      
     </div>
   );
 }
