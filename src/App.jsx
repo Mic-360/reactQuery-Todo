@@ -1,8 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import Client from './react-query-client';
 import './App.css';
 
 function App() {
   const url = 'http://localhost:3000/api/languages';
+
+  const [addLanguage, setAddLanguage] = useState('');
 
   const {
     data: languages,
@@ -15,6 +18,17 @@ function App() {
       return await res.json();
     },
     select: (data) => data.language,
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data) => fetcher('http://localhost:3000/api/create', data),
+    onSuccess: (data) => {
+      setAddLanguage('');
+      Client.invalidateQueries('languages');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
   });
 
   if (isLoading) {
@@ -37,6 +51,22 @@ function App() {
           </p>
         );
       })}
+
+      <div className='task'>
+        <strong>Add a new language</strong>
+        <input
+          type='text'
+          value={addLanguage}
+          onChange={(e) => setAddLanguage(e.target.value)}
+        />
+        <button
+          onClick={() => {
+            mutation.mutate({ record: addLanguage });
+          }}
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 }
