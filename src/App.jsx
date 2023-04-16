@@ -1,6 +1,16 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import Client from './react-query-client';
 import './App.css';
+
+const fetcher = (url, data) =>
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 
 function App() {
   const url = 'http://localhost:3000/api/languages';
